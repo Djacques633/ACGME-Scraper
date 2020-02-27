@@ -1,14 +1,29 @@
-import xlsxwriter
-import requests
-import time
-from selenium import webdriver
-from selenium.webdriver import ActionChains
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from bs4 import BeautifulSoup
-import pyautogui
-
-browser = webdriver.Chrome("C:/Users/Daniel/Downloads/chromedriver_win32/chromedriver.exe")
+import os
+import sys
+import re
+try:
+    import xlsxwriter
+    import requests
+    import time
+    from selenium import webdriver
+    from selenium.webdriver import ActionChains
+    from selenium.webdriver.common.by import By
+    from selenium.webdriver.common.keys import Keys
+    from bs4 import BeautifulSoup
+    import tkinter
+    import tkinter.filedialog
+except ImportError:
+    os.system('python -m pip install xlsxwriter')
+    os.system('python -m pip install requests')
+    os.system('python -m pip install time')
+    os.system('python -m pip install selenium')
+    os.system('python -m pip install bs4')
+    os.system('python -m pip install tkinter')
+    os.system('python -m pip install tkinter.filedialog')
+    
+    
+    
+browser = webdriver.Chrome("C:/Users/dj214316/Desktop/Newfolder/Newfolder/chromedriver.exe")
 browser.get("https://apps.acgme.org/ads/Public/Programs/Search")
 button2 = browser.find_element_by_link_text("Search by Specialty")
 button2.click()
@@ -17,7 +32,8 @@ specialty = []
 for x in range(1,len(specialties)):
     specialty.append(str(specialties[x].text))
 browser.close()
-f = xlsxwriter.Workbook('master6.xlsx')
+finput = tkinter.filedialog.askopenfilename()
+f = xlsxwriter.Workbook('fileinput')
 sheet1 = f.add_worksheet()
 sheet1.write('A1', 'Specialty')
 sheet1.write('B1', 'Title')
@@ -32,7 +48,7 @@ sheet1.write('J1', 'Cordinator Phone Number')
 y = 2
 numOfFails = 0
 for x in range(0,len(specialty)):
-    browser = webdriver.Chrome("C:/Users/Daniel/Downloads/chromedriver_win32/chromedriver.exe")
+    browser = webdriver.Chrome("C:/Users/dj214316/Desktop/Newfolder/Newfolder/chromedriver.exe")
     sheet1.write('A' + str(y), specialty[x])
     y += 1
     browser.get("https://apps.acgme.org/ads/Public/Programs/Search")
@@ -53,8 +69,6 @@ for x in range(0,len(specialty)):
     button3 = browser.find_elements_by_class_name("listview-filter-accept-button")
     button3[1].click()
     time.sleep(1)
-   # pyautogui.scroll(-500)
-    time.sleep(1)       #1100, 602
     for i in range(0,100):
         odd_element = browser.find_elements_by_class_name("odd")
         even_element = browser.find_elements_by_class_name("even")
@@ -68,27 +82,11 @@ for x in range(0,len(specialty)):
                 hover = ActionChains(browser).move_to_element(even_element[int(i/2)])
             except:
                 continue
-        #pyautogui.moveTo(100,100)
-        #pyautogui.moveTo(1150,815 + i * 70)  #The first row mouse coordinates to make "View Program" visible
         hover.perform()
         data = browser.find_elements_by_link_text("View Program")
         try:
             data[0].click() #If data[0].click works, then that means there was another program to view
         except:
-            #Try scrolling to find the next link
-            
-            
-            
-            #pyautogui.moveTo(100,100)
-            #pyautogui.moveTo(1150,815 + (i - numOfFails) * 70)
-            time.sleep(1)
-           # pyautogui.scroll(-63)
-            time.sleep(1)
-            data = browser.find_elements_by_link_text("View Program")
-            try:
-                data[0].click()
-            except:
-                numOfFails = 0
                 break
 
 
@@ -162,5 +160,4 @@ for x in range(0,len(specialty)):
         browser.back()
         time.sleep(3)
     browser.close()
-print("Success!")
 f.close()
