@@ -8,7 +8,7 @@ from selenium.webdriver.common.keys import Keys
 from bs4 import BeautifulSoup
 import pyautogui
 
-browser = webdriver.Chrome("C:/Users/dj214316/Desktop/Newfolder/Newfolder/chromedriver.exe")
+browser = webdriver.Chrome("C:/Users/Daniel/Downloads/chromedriver_win32/chromedriver.exe")
 browser.get("https://apps.acgme.org/ads/Public/Programs/Search")
 button2 = browser.find_element_by_link_text("Search by Specialty")
 button2.click()
@@ -32,7 +32,7 @@ sheet1.write('J1', 'Cordinator Phone Number')
 y = 2
 numOfFails = 0
 for x in range(0,len(specialty)):
-    browser = webdriver.Chrome("C:/Users/dj214316/Desktop/Newfolder/Newfolder/chromedriver.exe")
+    browser = webdriver.Chrome("C:/Users/Daniel/Downloads/chromedriver_win32/chromedriver.exe")
     sheet1.write('A' + str(y), specialty[x])
     y += 1
     browser.get("https://apps.acgme.org/ads/Public/Programs/Search")
@@ -41,11 +41,13 @@ for x in range(0,len(specialty)):
     button = browser.find_element_by_link_text("Search by State")
     button.click()
     browser.find_element_by_link_text("Search by State").send_keys("Ohio")
+    time.sleep(.5)
     browser.find_element_by_link_text("Search by State").send_keys(Keys.ENTER)
-
+    time.sleep(.5)
     button2 = browser.find_element_by_link_text("Search by Specialty")
     button2.click()
     browser.find_element_by_link_text("Search by Specialty").send_keys(specialty[x])    #Search for the next specialty
+    time.sleep(.5)
     browser.find_element_by_link_text("Search by Specialty").send_keys(Keys.ENTER)
     time.sleep(1)
     button3 = browser.find_elements_by_class_name("listview-filter-accept-button")
@@ -160,4 +162,5 @@ for x in range(0,len(specialty)):
         browser.back()
         time.sleep(3)
     browser.close()
+print("Success!")
 f.close()
