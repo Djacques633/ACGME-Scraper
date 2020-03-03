@@ -2,9 +2,9 @@ import os
 import sys
 import re
 try:
-    import xlsxwriter
     import requests
     import time
+    import xlsxwriter
     from selenium import webdriver
     from selenium.webdriver import ActionChains
     from selenium.webdriver.common.by import By
@@ -12,6 +12,7 @@ try:
     from bs4 import BeautifulSoup
     import tkinter
     import tkinter.filedialog
+    
 except ImportError:
     os.system('python -m pip install xlsxwriter')
     os.system('python -m pip install requests')
@@ -23,7 +24,7 @@ except ImportError:
     
     
     
-browser = webdriver.Chrome("C:/Users/dj214316/Desktop/Newfolder/Newfolder/chromedriver.exe")
+browser = webdriver.Chrome("./chromedriver.exe")
 browser.get("https://apps.acgme.org/ads/Public/Programs/Search")
 button2 = browser.find_element_by_link_text("Search by Specialty")
 button2.click()
@@ -36,19 +37,20 @@ finput = tkinter.filedialog.askopenfilename()
 f = xlsxwriter.Workbook('fileinput')
 sheet1 = f.add_worksheet()
 sheet1.write('A1', 'Specialty')
-sheet1.write('B1', 'Title')
-sheet1.write('C1', 'Address')
-sheet1.write('D1', 'Website')
-sheet1.write('E1', 'Phone')
-sheet1.write('F1', 'Email')
-sheet1.write('G1', 'Director')
-sheet1.write('H1', 'Director Appointment Date')
-sheet1.write('I1', 'Cordinator')
-sheet1.write('J1', 'Cordinator Phone Number')
+sheet1.write('B1', 'Program number')
+sheet1.write('C1', 'Title')
+sheet1.write('D1', 'Address')
+sheet1.write('H1', 'Website')
+sheet1.write('I1', 'Phone')
+sheet1.write('J1', 'Email')
+sheet1.write('K1', 'Director')
+sheet1.write('L1', 'Director Appointment Date')
+sheet1.write('M1', 'Cordinator')
+sheet1.write('N1', 'Cordinator Phone Number')
 y = 2
 numOfFails = 0
 for x in range(0,len(specialty)):
-    browser = webdriver.Chrome("C:/Users/dj214316/Desktop/Newfolder/Newfolder/chromedriver.exe")
+    browser = webdriver.Chrome("./chromedriver.exe")
     sheet1.write('A' + str(y), specialty[x])
     y += 1
     browser.get("https://apps.acgme.org/ads/Public/Programs/Search")
@@ -96,8 +98,11 @@ for x in range(0,len(specialty)):
         
         html_source = browser.page_source
         title = str(browser.find_element_by_tag_name('h1').text)
+        program = title.split("-")[0]
         try:
             address = str(browser.find_element_by_xpath("/html/body/div[2]/div/div[2]/div[1]/div/div[3]/address").text)
+            expanded = address.split('\n')
+            print(address)
         except:
             address = "Could not find"
         try:
@@ -146,16 +151,23 @@ for x in range(0,len(specialty)):
         cord_email = " ".join(cord_email.split())
 
         sheet1.write('A' + str(y), specialty[x])
-        sheet1.write('B' + str(y), title)
-        sheet1.write('C' + str(y), address)
-        sheet1.write('D' + str(y), website)
-        sheet1.write('E' + str(y), phone)
-        sheet1.write('F' + str(y), email)
-        sheet1.write('G' + str(y), director)
-        sheet1.write('H' + str(y), directapp)
-        sheet1.write('I' + str(y), cord)
-        sheet1.write('J' + str(y), cord_phone)
-        sheet1.write('K' + str(y), cord_email)     
+        sheet1.write('B' + str(y), program)
+        sheet1.write('C' + str(y), title)
+        sheet1.write('D' + str(y), expanded[0])
+        try:
+            sheet1.write('E' + str(y), expanded[0])
+            sheet1.write('F' + str(y), expanded[0])
+            sheet1.write('G' + str(y), expanded[0])
+        except:
+            ()
+        sheet1.write('H' + str(y), website)
+        sheet1.write('I' + str(y), phone)
+        sheet1.write('J' + str(y), email)
+        sheet1.write('J' + str(y), director)
+        sheet1.write('K' + str(y), directapp)
+        sheet1.write('L' + str(y), cord)
+        sheet1.write('M' + str(y), cord_phone)
+        sheet1.write('N' + str(y), cord_email)     
         y += 1
         browser.back()
         time.sleep(3)
