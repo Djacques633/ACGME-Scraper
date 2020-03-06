@@ -40,15 +40,18 @@ sheet1.write('A1', 'Specialty')
 sheet1.write('B1', 'Program number')
 sheet1.write('C1', 'Organization')
 sheet1.write('D1', 'Address')
-sheet1.write('H1', 'Website')
-sheet1.write('I1', 'Phone')
-sheet1.write('J1', 'Email')
-sheet1.write('K1', 'Director')
-sheet1.write('L1', 'Director Appointment Date')
-sheet1.write('M1', 'Cordinator')
-sheet1.write('N1', 'Cordinator Phone Number')
-sheet1.write('O1', 'Cordinator Email')
-sheet1.write('P1', 'Osteopathic Recognition')
+sheet1.write('H1', 'City')
+sheet1.write('I1', 'State')
+sheet1.write('J1', 'Zip code')
+sheet1.write('K1', 'Website')
+sheet1.write('L1', 'Phone')
+sheet1.write('M1', 'Email')
+sheet1.write('N1', 'Director')
+sheet1.write('O1', 'Director Appointment Date')
+sheet1.write('P1', 'Cordinator')
+sheet1.write('Q1', 'Cordinator Phone Number')
+sheet1.write('R1', 'Cordinator Email')
+sheet1.write('S1', 'Osteopathic Recognition')
 y = 2
 numOfFails = 0
 #for x in range(0,len(specialty)):
@@ -73,111 +76,124 @@ time.sleep(.5)
 button3 = browser.find_elements_by_class_name("listview-filter-accept-button")
 button3[1].click()
 time.sleep(1)
-for i in range(0,1000):
-    odd_element = browser.find_elements_by_class_name("odd")
-    even_element = browser.find_elements_by_class_name("even")
-    if i % 2 == 1:
+try:
+    for i in range(0,1000):
+        odd_element = browser.find_elements_by_class_name("odd")
+        even_element = browser.find_elements_by_class_name("even")
+        if i % 2 == 1:
+            try:
+                hover = ActionChains(browser).move_to_element(even_element[int(i/2)])
+            except:
+                continue
+        else:
+            try:
+                hover = ActionChains(browser).move_to_element(odd_element[int(i/2)])
+            except:
+                continue
+        hover.perform()
+        data = browser.find_elements_by_link_text("View Program")
         try:
-            hover = ActionChains(browser).move_to_element(even_element[int(i/2)])
+            data[0].click() #If data[0].click works, then that means there was another program to view
         except:
-            continue
-    else:
+                break
+        html_source = browser.page_source
+        title = str(browser.find_element_by_tag_name('h1').text)
+        program = title.split("-")[0]
+        title = title.split("-")[1]
         try:
-            hover = ActionChains(browser).move_to_element(odd_element[int(i/2)])
+            specialty = str(browser.find_element_by_xpath("//*[@id='content-panel']/div[3]/dl[1]/dd[1]").text)
         except:
-            continue
-    hover.perform()
-    data = browser.find_elements_by_link_text("View Program")
-    try:
-        data[0].click() #If data[0].click works, then that means there was another program to view
-    except:
-            break
-    html_source = browser.page_source
-    title = str(browser.find_element_by_tag_name('h1').text)
-    program = title.split("-")[0]
-    title = title.split("-")[1]
-    try:
-        specialty = str(browser.find_element_by_xpath("//*[@id='content-panel']/div[3]/dl[1]/dd[1]").text)
-    except:
-        specialty = "Could not find"
-    try:
-        address = str(browser.find_element_by_xpath("/html/body/div[2]/div/div[2]/div[1]/div/div[3]/address").text)
-        expanded = address.split('\n')
-        print(address)
-    except:
-        address = "Could not find"
-    try:
-        website = str(browser.find_element_by_xpath("//*[@id='content-panel']/div[3]/a").text)
-    except:
-        website = "Could not find"
-    try:
-        phone = str(browser.find_element_by_xpath("//*[@id='content-panel']/div[3]/dl[3]/dd[1]").text)
-    except:
-        phone = "Could not find"
-    try:
-        email = str(browser.find_element_by_xpath("//*[@id='content-panel']/div[3]/dl[3]/dd[2]/a").text)
-    except:
-        email = "Could not find"
-    try:
-        director = str(browser.find_element_by_xpath("//*[@id='content-panel']/div[4]/ul/li[1]").text)
-    except:
-        director = "Could not find"
-    try:
-        directapp = str(browser.find_element_by_xpath("//*[@id='content-panel']/div[4]/dl/dd").text)
-    except:
-        directapp = "Could not find"
-    try:
-        cord = str(browser.find_element_by_xpath("//*[@id='content-panel']/div[5]/ul/li[1]").text)
-    except:
-        cord = "Could not find"
-    try:
-        cord_phone = str(browser.find_element_by_xpath("//*[@id='content-panel']/div[5]/dl/dd[1]").text)
-    except:
-        cord_phone = "Could not find"
-    try:
-        cord_email = str(browser.find_element_by_xpath("//*[@id='content-panel']/div[5]/dl/dd[2]/a").text)
-    except:
-        cord_email = "Could not find"
-    try:
-        recognition = str(browser.find_element_by_xpath("//*[@id='content-panel']/div[6]/dl/dd[6]/i").text)
-    except:
-        recognition = "Could not find"
+            specialty = "Could not find"
+        try:
+            address = str(browser.find_element_by_xpath("/html/body/div[2]/div/div[2]/div[1]/div/div[3]/address").text)
+            expanded = address.split('\n')
+            city = expanded[expanded.len() -1].split(", ")[0]
+            state = expanded[expanded.len() - 1].split(",")[1][0:2]
+            zip_code = expanded[expanded.len() - 1].split(",")[1][3:]
+            print(city)
+            print("\n")
+            print(state)
+            print("\n")
+            print(zip_code)
+        except:
+            address = "Could not find"
+        try:
+            website = str(browser.find_element_by_xpath("//*[@id='content-panel']/div[3]/a").text)
+        except:
+            website = "Could not find"
+        try:
+            phone = str(browser.find_element_by_xpath("//*[@id='content-panel']/div[3]/dl[3]/dd[1]").text)
+        except:
+            phone = "Could not find"
+        try:
+            email = str(browser.find_element_by_xpath("//*[@id='content-panel']/div[3]/dl[3]/dd[2]/a").text)
+        except:
+            email = "Could not find"
+        try:
+            director = str(browser.find_element_by_xpath("//*[@id='content-panel']/div[4]/ul/li[1]").text)
+        except:
+            director = "Could not find"
+        try:
+            directapp = str(browser.find_element_by_xpath("//*[@id='content-panel']/div[4]/dl/dd").text)
+        except:
+            directapp = "Could not find"
+        try:
+            cord = str(browser.find_element_by_xpath("//*[@id='content-panel']/div[5]/ul/li[1]").text)
+        except:
+            cord = "Could not find"
+        try:
+            cord_phone = str(browser.find_element_by_xpath("//*[@id='content-panel']/div[5]/dl/dd[1]").text)
+        except:
+            cord_phone = "Could not find"
+        try:
+            cord_email = str(browser.find_element_by_xpath("//*[@id='content-panel']/div[5]/dl/dd[2]/a").text)
+        except:
+            cord_email = "Could not find"
+        try:
+            recognition = str(browser.find_element_by_xpath("//*[@id='content-panel']/div[6]/dl/dd[6]/i").text)
+        except:
+            recognition = "Could not find"
+        
+        specialty = " ".join(specialty.split())
+        title = " ".join(title.split())
+        address = " ".join(address.split())
+        website = " ".join(website.split())
+        phone = " ".join(phone.split())
+        email = " ".join(email.split())
+        director = " ".join(director.split())
+        directapp = " ".join(directapp.split())
+        cord = " ".join(cord.split())
+        cord_phone = " ".join(cord_phone.split())
+        cord_email = " ".join(cord_email.split())
+        recognition = " ".join(recognition.split())
 
-    specialty = " ".join(specialty.split())
-    title = " ".join(title.split())
-    address = " ".join(address.split())
-    website = " ".join(website.split())
-    phone = " ".join(phone.split())
-    email = " ".join(email.split())
-    director = " ".join(director.split())
-    directapp = " ".join(directapp.split())
-    cord = " ".join(cord.split())
-    cord_phone = " ".join(cord_phone.split())
-    cord_email = " ".join(cord_email.split())
-    recognition = " ".join(recognition.split())
-
-    sheet1.write('A' + str(y), specialty)
-    sheet1.write('B' + str(y), program)
-    sheet1.write('C' + str(y), title)
-    try:
-        sheet1.write('D' + str(y), expanded[0])
-        sheet1.write('E' + str(y), expanded[1])
-        sheet1.write('F' + str(y), expanded[2])
-        sheet1.write('G' + str(y), expanded[3])
-    except:
-        ()
-    sheet1.write('H' + str(y), website)
-    sheet1.write('I' + str(y), phone)
-    sheet1.write('J' + str(y), email)
-    sheet1.write('K' + str(y), director)
-    sheet1.write('L' + str(y), directapp)
-    sheet1.write('M' + str(y), cord)
-    sheet1.write('N' + str(y), cord_phone)
-    sheet1.write('O' + str(y), cord_email)
-    sheet1.write('P' + str(y), recognition)       
-    y += 1
-    browser.back()
-    browser.refresh()
-    time.sleep(3)
-browser.close()
-f.close()
+        sheet1.write('A' + str(y), specialty)
+        sheet1.write('B' + str(y), program)
+        sheet1.write('C' + str(y), title)
+        try:
+            sheet1.write('D' + str(y), expanded[0])
+            sheet1.write('E' + str(y), expanded[1])
+            sheet1.write('F' + str(y), expanded[2])
+            sheet1.write('G' + str(y), expanded[3])
+        except:
+            ()
+        sheet1.write('H' + str(y), city)
+        sheet1.write('I' + str(y), state)
+        sheet1.write('J' + str(y), zip_code)
+        sheet1.write('K' + str(y), website)
+        sheet1.write('L' + str(y), phone)
+        sheet1.write('M' + str(y), email)
+        sheet1.write('N' + str(y), director)
+        sheet1.write('O' + str(y), directapp)
+        sheet1.write('P' + str(y), cord)
+        sheet1.write('Q' + str(y), cord_phone)
+        sheet1.write('R' + str(y), cord_email)
+        sheet1.write('S' + str(y), recognition)       
+        y += 1
+        browser.back()
+        browser.refresh()
+        time.sleep(3)
+    browser.close()
+    f.close()
+except:
+    f.close()
