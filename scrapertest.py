@@ -34,11 +34,11 @@ except ImportError:
 #    specialty.append(str(specialties[x].text))
 #browser.close()
 finput = tkinter.filedialog.askopenfilename()
-f = xlsxwriter.Workbook('fileinput')
+f = xlsxwriter.Workbook(finput)
 sheet1 = f.add_worksheet()
 sheet1.write('A1', 'Specialty')
 sheet1.write('B1', 'Program number')
-sheet1.write('C1', 'Title')
+sheet1.write('C1', 'Organization')
 sheet1.write('D1', 'Address')
 sheet1.write('H1', 'Website')
 sheet1.write('I1', 'Phone')
@@ -47,6 +47,8 @@ sheet1.write('K1', 'Director')
 sheet1.write('L1', 'Director Appointment Date')
 sheet1.write('M1', 'Cordinator')
 sheet1.write('N1', 'Cordinator Phone Number')
+sheet1.write('O1', 'Cordinator Email')
+sheet1.write('P1', 'Osteopathic Recognition')
 y = 2
 numOfFails = 0
 #for x in range(0,len(specialty)):
@@ -76,12 +78,12 @@ for i in range(0,1000):
     even_element = browser.find_elements_by_class_name("even")
     if i % 2 == 1:
         try:
-            hover = ActionChains(browser).move_to_element(odd_element[int(i/2)])
+            hover = ActionChains(browser).move_to_element(even_element[int(i/2)])
         except:
             continue
     else:
         try:
-            hover = ActionChains(browser).move_to_element(even_element[int(i/2)])
+            hover = ActionChains(browser).move_to_element(odd_element[int(i/2)])
         except:
             continue
     hover.perform()
@@ -93,6 +95,7 @@ for i in range(0,1000):
     html_source = browser.page_source
     title = str(browser.find_element_by_tag_name('h1').text)
     program = title.split("-")[0]
+    title = title.split("-")[1]
     try:
         specialty = str(browser.find_element_by_xpath("//*[@id='content-panel']/div[3]/dl[1]/dd[1]").text)
     except:
@@ -136,7 +139,7 @@ for i in range(0,1000):
     except:
         cord_email = "Could not find"
     try:
-        recognition = str(browser.find_element_by_xpath("//*[@id='content-panel']/div[6]/dl/dd[5]").text)
+        recognition = str(browser.find_element_by_xpath("//*[@id='content-panel']/div[6]/dl/dd[6]/i").text)
     except:
         recognition = "Could not find"
 
@@ -156,24 +159,25 @@ for i in range(0,1000):
     sheet1.write('A' + str(y), specialty)
     sheet1.write('B' + str(y), program)
     sheet1.write('C' + str(y), title)
-    sheet1.write('D' + str(y), expanded[0])
     try:
-        sheet1.write('E' + str(y), expanded[0])
-        sheet1.write('F' + str(y), expanded[1])
-        sheet1.write('G' + str(y), expanded[2])
-        sheet1.write('H' + str(y), expanded[3])
+        sheet1.write('D' + str(y), expanded[0])
+        sheet1.write('E' + str(y), expanded[1])
+        sheet1.write('F' + str(y), expanded[2])
+        sheet1.write('G' + str(y), expanded[3])
     except:
         ()
-    sheet1.write('I' + str(y), website)
-    sheet1.write('J' + str(y), phone)
-    sheet1.write('K' + str(y), email)
-    sheet1.write('L' + str(y), cord)
-    sheet1.write('M' + str(y), cord_phone)
-    sheet1.write('N' + str(y), cord_email)
-    sheet1.write('O' + str(y), cord_email)       
+    sheet1.write('H' + str(y), website)
+    sheet1.write('I' + str(y), phone)
+    sheet1.write('J' + str(y), email)
+    sheet1.write('K' + str(y), director)
+    sheet1.write('L' + str(y), directapp)
+    sheet1.write('M' + str(y), cord)
+    sheet1.write('N' + str(y), cord_phone)
+    sheet1.write('O' + str(y), cord_email)
+    sheet1.write('P' + str(y), recognition)       
     y += 1
     browser.back()
+    browser.refresh()
     time.sleep(3)
-    break
 browser.close()
 f.close()
