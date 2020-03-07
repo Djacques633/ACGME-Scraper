@@ -110,11 +110,11 @@ try:
             city = expanded[len(expanded) - 1].split(", ")[0]
             state = expanded[len(expanded) - 1].split(",")[1][1:3]
             zip_code = expanded[len(expanded) - 1].split(",")[1][4:]
-            print(city)
-            print("\n")
-            print(state)
-            print("\n")
-            print(zip_code)
+           # print(city)
+           # print("\n")
+           # print(state)
+           # print("\n")
+           # print(zip_code)
         except:
             address = "Could not find"
         try:
@@ -150,9 +150,12 @@ try:
         except:
             cord_email = "Could not find"
         try:
-            recognition = str(browser.find_element_by_xpath("//*[@id='content-panel']/div[6]/dl/dd[6]/i").text)
+            recognition = str(browser.find_element_by_xpath("//*[@id='content-panel']/div[6]/dl/dd[5]").text)
         except:
-            recognition = "Could not find"
+            try:
+                recognition = str(browser.find_element_by_xpath("//*[@id='content-panel']/div[6]/dl/dd[6]i").text)
+            except:
+                recognition = "Could not find"
         
         specialty = " ".join(specialty.split())
         title = " ".join(title.split())
@@ -193,6 +196,7 @@ try:
         browser.back()
         browser.refresh()
         time.sleep(3)
+        f.close()
     browser.close()
     f.close()
 except:
