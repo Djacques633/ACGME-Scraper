@@ -108,8 +108,8 @@ try:
             address = str(browser.find_element_by_xpath("/html/body/div[2]/div/div[2]/div[1]/div/div[3]/address").text)
             expanded = address.split('\n')
             city = expanded[len(expanded) - 1].split(", ")[0]
-            state = expanded[len(expanded) - 1].split(",")[1][0:2]
-            zip_code = expanded[len(expanded) - 1].split(",")[1][3:]
+            state = expanded[len(expanded) - 1].split(",")[1][1:3]
+            zip_code = expanded[len(expanded) - 1].split(",")[1][4:]
             print(city)
             print("\n")
             print(state)
