@@ -150,12 +150,15 @@ try:
         except:
             cord_email = "Could not find"
         try:
-            recognition = str(browser.find_element_by_xpath("//*[@id='content-panel']/div[6]/dl/dd[5]").text)
+            recognition = str(browser.find_element_by_xpath("/html/body/div[2]/div/div[2]/div[1]/div/div[6]/dl/dd[6]/i").text)
         except:
             try:
-                recognition = str(browser.find_element_by_xpath("//*[@id='content-panel']/div[6]/dl/dd[6]i").text)
+                recognition = str(browser.find_element_by_xpath("/html/body/div[2]/div/div[2]/div[1]/div/div[6]/dl/dd[5]").text)
             except:
-                recognition = "Could not find"
+                try:
+                    recognition = str(browser.find_element_by_xpath("//*[@id='content-panel']/div[7]/dl/dd[5]/i").text)
+                except:
+                    recognition = "Could not find"
         
         specialty = " ".join(specialty.split())
         title = " ".join(title.split())
@@ -196,7 +199,6 @@ try:
         browser.back()
         browser.refresh()
         time.sleep(3)
-        f.close()
     browser.close()
     f.close()
 except:
